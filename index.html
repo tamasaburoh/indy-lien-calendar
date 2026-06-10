@@ -362,7 +362,11 @@
       text-align: center;
       border-top: 1px solid var(--line);
     }
-
+      .visitor-counter{
+      margin-top:12px;
+      font-size:14px;
+      color:#999;
+}
     /* =========================================================
        写真拡大表示・動画再生
     ========================================================= */
@@ -737,6 +741,21 @@
   <footer class="footer">
     INDY & LIEN PHOTO PROJECT<br>
     © 2026 Chargers Holiday
+  <div class="visitor-counter">
+    👀 Visitors :
+    <span id="visitorCount">Loading...</span>
+  </div>
+  <script>
+fetch("https://counterapi.dev/api/indy-lien-calendar/home/up")
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("visitorCount").textContent =
+      data.count ?? data.value ?? "-";
+  })
+  .catch(() => {
+    document.getElementById("visitorCount").textContent = "-";
+  });
+</script>
   </footer>
 <a href="privacy.html">
   プライバシーポリシー
@@ -996,5 +1015,16 @@
       if (event.target.id === "videoModal") closeVideo();
     });
   </script>
+<script>
+fetch("https://counterapi.dev/api/indy-lien-calendar/home/up")
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("visitorCount").textContent =
+      data.count ?? data.value ?? "-";
+  })
+  .catch(() => {
+    document.getElementById("visitorCount").textContent = "-";
+  });
+</script>
 </body>
 </html>
