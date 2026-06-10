@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2021年 カレンダー</title>
+<style>
+:root{--bg:#05060a;--line:rgba(255,255,255,.14);--text:#f7f3ea;--muted:rgba(247,243,234,.72);--accent:#f5c96b}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 20% 0,#1f2433 0,#05060a 36%,#020204 100%);color:var(--text);font-family:"BIZ UDPGothic","BIZ UDPゴシック","Yu Gothic","游ゴシック","Meiryo",sans-serif;line-height:1.7}h1,h2,h3{font-family:"Yu Gothic","游ゴシック","BIZ UDPGothic",sans-serif;font-weight:800;letter-spacing:-.04em}a{color:inherit;text-decoration:none}.wrap{max-width:1480px;margin:auto;padding:0 24px}.nav{position:sticky;top:18px;z-index:20;margin:18px auto 0;max-width:1320px;width:calc(100% - 44px);display:flex;justify-content:space-between;gap:18px;align-items:center;padding:14px 22px;border:1px solid var(--line);border-radius:999px;background:rgba(20,23,31,.72);backdrop-filter:blur(18px)}.brand{font-weight:900;letter-spacing:.08em}.back{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 16px;border-radius:999px;background:linear-gradient(135deg,#fff,#f3cc75);color:#101010;font-weight:900}.hero{padding:80px 0 36px}.eyebrow{color:var(--accent);font-size:13px;letter-spacing:.16em;font-weight:900;text-transform:uppercase}.hero h1{font-size:clamp(40px,5vw,76px);line-height:1.03;margin:10px 0 16px}.lead{color:var(--muted);font-size:17px;max-width:780px}.info{margin-top:18px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.045);color:var(--muted);display:inline-block}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-bottom:70px}.photo-card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));overflow:hidden;cursor:pointer}.photo-frame{height:260px;background:#10131b center/contain no-repeat;border-bottom:1px solid var(--line);display:grid;place-items:center}.photo-frame.no-entry{font-size:34px;font-weight:900;color:rgba(255,255,255,.74);text-align:center;line-height:1.1}.photo-body{padding:16px}.month{display:inline-flex;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--accent);font-size:12px;font-weight:900}.photo-body h3{font-size:24px;margin:10px 0 4px}.photo-body p{color:var(--muted);margin:0}.footer{padding:36px 0 54px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}.lightbox{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.86);z-index:100;padding:24px}.lightbox.open{display:grid}.lightbox img{max-width:min(96vw,1400px);max-height:84vh;width:auto;border-radius:20px;object-fit:contain}.close{position:fixed;top:18px;right:18px;border:0;border-radius:999px;background:rgba(255,255,255,.15);color:#fff;font-size:34px;width:58px;height:58px;cursor:pointer}@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{border-radius:28px;align-items:flex-start}}@media(max-width:640px){.wrap{padding:0 16px}.nav{position:relative;top:0;width:100%;margin:0;border-radius:0;flex-direction:column;align-items:flex-start}.hero{padding-top:36px}.grid{grid-template-columns:1fr}.photo-frame{height:300px}}
+</style>
+</head>
+<body>
+<!-- =========================================================
+  2021年 歴代カレンダー写真ページ
+
+  写真を差し替える場合：
+  photos/history/2021/2021_photos/ フォルダ内の画像を
+  同じ名前で上書きしてください。
+
+  jan.jpg, feb.jpg, mar.jpg, apr.jpg, may.jpg, jun.jpg,
+  jul.jpg, aug.jpg, sep.jpg, oct.jpg, nov.jpg, dec.jpg
+
+  画像が無い月は「Sorry No Entry」と表示されます。
+========================================================= -->
+<nav class="nav">
+  <div class="brand">INDY & LIEN PHOTO PROJECT</div>
+  <a class="back" href="../../../chergers_calendar_project.html#history">← トップへ戻る</a>
+</nav>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Calendar Archive</div>
+    <h1>2021年<br>カレンダー</h1>
+    <p class="lead">2021年のカレンダーに採用した1月から12月までの写真一覧です。各写真をクリックすると大きく表示できます。</p>
+  </section>
+  <section class="grid" id="photoGrid"></section>
+</main>
+<footer class="footer">INDY & LIEN PHOTO PROJECT<br>© 2026 Chargers Holiday</footer>
+<div id="lightbox" class="lightbox">
+  <button class="close" onclick="closeLightbox()">×</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+<script>
+const PHOTO_DIR = "2021_photos/";
+const photos = [
+  { month: "1月", file: "2021_jan.jpg" },
+  { month: "2月", file: "2021_feb.jpg" },
+  { month: "3月", file: "2021_mar.jpg" },
+  { month: "4月", file: "2021_apr.jpg" },
+  { month: "5月", file: "2021_may.jpg" },
+  { month: "6月", file: "2021_jun.jpg" },
+  { month: "7月", file: "2021_jul.jpg" },
+  { month: "8月", file: "2021_aug.jpg" },
+  { month: "9月", file: "2021_sep.jpg" },
+  { month: "10月", file: "2021_oct.jpg" },
+  { month: "11月", file: "2021_nov.jpg" },
+  { month: "12月", file: "2021_dec.jpg" }
+];
+function cardHTML(item) {
+  const src = PHOTO_DIR + item.file;
+  return `
+    <article class="photo-card" data-img="${src}">
+      <div class="photo-frame" style="background-image:url('${src}')"></div>
+      <div class="photo-body">
+        <span class="month">${item.month}</span>
+      </div>
+    </article>
+  `;
+}
+function render() {
+  document.getElementById("photoGrid").innerHTML = photos.map(cardHTML).join("");
+  setupNoEntry();
+  setupLightbox();
+}
+function setupNoEntry() {
+  document.querySelectorAll(".photo-frame").forEach((frame) => {
+    const imageUrl = frame.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/)?.[1];
+    if (!imageUrl) return;
+    const image = new Image();
+    image.onerror = () => {
+      frame.style.backgroundImage = "none";
+      frame.classList.add("no-entry");
+      frame.innerHTML = "Sorry<br>No Entry";
+    };
+    image.src = imageUrl;
+  });
+}
+function setupLightbox() {
+  document.querySelectorAll(".photo-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      openLightbox(card.dataset.img);
+    });
+  });
+}
+function openLightbox(src) {
+  lightboxImg.src = src;
+  lightbox.classList.add("open");
+}
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  lightboxImg.src = "";
+}
+lightbox.addEventListener("click", (event) => {
+  if (event.target === lightbox) closeLightbox();
+});
+render();
+</script>
+</body>
+</html>
