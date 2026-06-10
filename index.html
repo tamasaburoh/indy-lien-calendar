@@ -1008,27 +1008,6 @@
       if (event.target.id === "videoModal") closeVideo();
     });
   </script>
-<script>
-/* =========================================================
-   訪問者カウンター
-   CounterAPI.com を利用
-========================================================= */
-(function () {
-  const counter = document.getElementById("visitorCount");
-  if (!counter) return;
 
-  fetch("https://counterapi.com/api/tamasaburoh.github.io/view/indy-lien-calendar-home")
-    .then((response) => {
-      if (!response.ok) throw new Error("counter api error");
-      return response.json();
-    })
-    .then((data) => {
-      counter.textContent = data.value ?? "-";
-    })
-    .catch(() => {
-      counter.textContent = "-";
-    });
-})();
-</script>
 </body>
 </html>
