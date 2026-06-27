@@ -791,7 +791,33 @@
     ></iframe>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      onSnapshot,
+      runTransaction
+    } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    /* =========================================================
+       Firebase設定
+       ※FirebaseのWeb用apiKeyは公開前提の識別子です。
+       ※ログイン用パスワードや秘密鍵ではありません。
+    ========================================================= */
+    const firebaseConfig = {
+      apiKey: "AIzaSyBDUHQheYnWF1vAZFFGVJGQCvHvxp95XOs",
+      authDomain: "indy-lien-calendar.firebaseapp.com",
+      projectId: "indy-lien-calendar",
+      storageBucket: "indy-lien-calendar.firebasestorage.app",
+      messagingSenderId: "661017215984",
+      appId: "1:661017215984:web:83e05fd0e3d080c9821335",
+      measurementId: "G-FHWBEPWRL8"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+
     /* =========================================================
        写真フォルダ設定
     ========================================================= */
@@ -959,21 +985,49 @@
     function setupLikes() {
       document.querySelectorAll(".like-btn").forEach((button) => {
         const key = button.dataset.key;
-        const alreadyLiked = localStorage.getItem(`${key}_done`) === "1";
-        let count = Number(localStorage.getItem(key) || 0);
+        const countSpan = button.querySelector("span");
+        const doneKey = `${key}_done`;
+        const likeRef = doc(db, "likes", key);
 
-        button.querySelector("span").textContent = count;
-        if (alreadyLiked) button.classList.add("liked");
-
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-          if (localStorage.getItem(`${key}_done`) === "1") return;
-
-          count++;
-          localStorage.setItem(key, count);
-          localStorage.setItem(`${key}_done`, "1");
-          button.querySelector("span").textContent = count;
+        if (localStorage.getItem(doneKey) === "1") {
           button.classList.add("liked");
+        }
+
+        // Firebase上の全員共通カウントをリアルタイム表示
+        onSnapshot(likeRef, (snapshot) => {
+          const count = snapshot.exists() ? Number(snapshot.data().count || 0) : 0;
+          countSpan.textContent = count;
+        }, (error) => {
+          console.error("ハート数の取得に失敗しました", error);
+          countSpan.textContent = "?";
+        });
+
+        button.addEventListener("click", async (event) => {
+          event.stopPropagation();
+
+          // 同じブラウザからは1回だけ
+          if (localStorage.getItem(doneKey) === "1") return;
+
+          button.disabled = true;
+
+          try {
+            await runTransaction(db, async (transaction) => {
+              const snapshot = await transaction.get(likeRef);
+              const currentCount = snapshot.exists() ? Number(snapshot.data().count || 0) : 0;
+
+              transaction.set(likeRef, {
+                count: currentCount + 1
+              }, { merge: true });
+            });
+
+            localStorage.setItem(doneKey, "1");
+            button.classList.add("liked");
+          } catch (error) {
+            console.error("ハートの保存に失敗しました", error);
+            alert("ハートの保存に失敗しました。少し時間をおいて再度お試しください。");
+          } finally {
+            button.disabled = false;
+          }
         });
       });
     }
