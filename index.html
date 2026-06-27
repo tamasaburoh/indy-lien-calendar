@@ -1079,6 +1079,19 @@
     document.getElementById("videoModal").addEventListener("click", (event) => {
       if (event.target.id === "videoModal") closeVideo();
     });
+document.querySelectorAll(".close").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    document.querySelectorAll(".lightbox").forEach((box) => {
+      box.classList.remove("open");
+    });
+
+    const iframe = document.querySelector(".video-modal iframe");
+    if (iframe) {
+      iframe.src = "";
+    }
+  });
+});
   </script>
 
 </body>
